@@ -17,6 +17,17 @@ const WebsiteMonitor = () => {
   const [alerts, setAlerts] = useState([]);
   const [checkInterval, setCheckInterval] = useState(30); // segundos
 
+
+      useEffect(() => {
+      const savedWebsites = localStorage.getItem('websites');
+      if (savedWebsites) {
+        setWebsites(JSON.parse(savedWebsites));
+      }
+    }, []);
+
+    useEffect(() => {
+      localStorage.setItem('websites', JSON.stringify(websites));
+    }, [websites]);
   // Función para verificar el estado de una página
   const checkWebsite = async (website) => {
     try {
