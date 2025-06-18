@@ -2,13 +2,17 @@ import { AlertCircle, Bell, CheckCircle, Clock, Globe, Plus, RefreshCw, Trash2 }
 import { useCallback, useEffect, useState } from 'react';
 import './website-monitor-dashboard.css';
 
+const defaultWebsites = [
+  { id: 1, url: 'https://alosistemas.com', name: 'ALOSISTEMAS', status: 'unknown', responseTime: 0, lastCheck: null, uptime: 100, category: 'alosistemas' },
+  { id: 2, url: 'https://cliente1.com', name: 'Cliente Demo 1', status: 'unknown', responseTime: 0, lastCheck: null, uptime: 100, category: 'clientes' },
+  { id: 3, url: 'https://cliente2.com', name: 'Cliente Demo 2', status: 'unknown', responseTime: 0, lastCheck: null, uptime: 100, category: 'clientes' }
+];
+
 const WebsiteMonitor = () => {
-  const [websites, setWebsites] = useState([
-    { id: 1, url: 'https://alosistemas.com', name: 'ALOSISTEMAS Principal', status: 'unknown', responseTime: 0, lastCheck: null, uptime: 100, category: 'alosistemas' },
-    { id: 2, url: 'https://portal.alosistemas.com', name: 'Portal ALOSISTEMAS', status: 'unknown', responseTime: 0, lastCheck: null, uptime: 100, category: 'alosistemas' },
-    { id: 3, url: 'https://cliente1.com', name: 'Cliente Demo 1', status: 'unknown', responseTime: 0, lastCheck: null, uptime: 100, category: 'clientes' },
-    { id: 4, url: 'https://cliente2.com', name: 'Cliente Demo 2', status: 'unknown', responseTime: 0, lastCheck: null, uptime: 100, category: 'clientes' }
-  ]);
+  const [websites, setWebsites] = useState(() => {
+    const saved = localStorage.getItem('websites');
+    return saved ? JSON.parse(saved) : defaultWebsites;
+  });
   const [newUrl, setNewUrl] = useState('');
   const [newName, setNewName] = useState('');
   const [newCategory, setNewCategory] = useState('alosistemas');
@@ -17,17 +21,9 @@ const WebsiteMonitor = () => {
   const [alerts, setAlerts] = useState([]);
   const [checkInterval, setCheckInterval] = useState(30); // segundos
 
-
-      useEffect(() => {
-      const savedWebsites = localStorage.getItem('websites');
-      if (savedWebsites) {
-        setWebsites(JSON.parse(savedWebsites));
-      }
-    }, []);
-
-    useEffect(() => {
-      localStorage.setItem('websites', JSON.stringify(websites));
-    }, [websites]);
+  useEffect(() => {
+    localStorage.setItem('websites', JSON.stringify(websites));
+  }, [websites]);
   // Función para verificar el estado de una página
   const checkWebsite = async (website) => {
     try {
